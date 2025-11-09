@@ -198,6 +198,10 @@ const ReviewClient = () => {
         <div className="flex-1">
           <div className="mb-2 text-xs text-slate-400">{q.category}</div>
           <div className="mb-2 text-sm text-slate-400">{index + 1}/{reviewQuestions.length}</div>
+          {/* 正答率を左上に表示 */}
+          <div className="absolute top-4 left-4">
+            <span className="text-slate-400 text-sm">正答率: {isAnswered ? Math.round((correctCount / (index + 1)) * 100) : (index > 0 ? Math.round((correctCount / index) * 100) : 0)}%</span>
+          </div>
           <div className="mb-8 text-2xl font-bold text-neon-cyan">{q.words}</div>
           <div className="grid gap-4">
             {options.map((opt) => {
@@ -291,12 +295,9 @@ const ReviewClient = () => {
               次へ
             </button>
           </div>
-          <div className="mt-6">
-            <span className="text-slate-400">正答率: {isAnswered ? Math.round((correctCount / (index + 1)) * 100) : (index > 0 ? Math.round((correctCount / index) * 100) : 0)}%</span>
-            {reviewOrder.length > 0 && (
-              <div className="mt-4 text-sm text-neon-magenta">間違えた問題だけで再挑戦中！</div>
-            )}
-          </div>
+          {reviewOrder.length > 0 && (
+            <div className="mt-6 text-sm text-neon-magenta">間違えた問題だけで再挑戦中！</div>
+          )}
         </div>
       </div>
     </div>

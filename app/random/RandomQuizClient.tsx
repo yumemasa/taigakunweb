@@ -79,6 +79,12 @@ function RandomQuizClient() {
         <div className="flex-1">
           <div className="mb-2 text-xs text-slate-400">{q.category}</div>
           <div className="mb-2 text-sm text-slate-400">{index + 1}/{total}</div>
+          {/* 正答率を左上に表示 */}
+          <div className="absolute top-4 left-4">
+            <span className="text-slate-400 text-sm">
+              正答率: {isAnswered ? Math.round((correctCount / (index + 1)) * 100) : (index > 0 ? Math.round((correctCount / index) * 100) : 0)}%
+            </span>
+          </div>
           <div className="mb-8 text-2xl font-bold text-neon-cyan">{q.words}</div>
           <div className="grid gap-4">
             {options.map((opt) => {
@@ -119,11 +125,6 @@ function RandomQuizClient() {
             })}
           </div>
           <div className="w-full flex justify-center items-center gap-6 pt-6">
-          <div className="mt-6">
-            <span className="text-slate-400">
-              正答率: {isAnswered ? Math.round((correctCount / (index + 1)) * 100) : (index > 0 ? Math.round((correctCount / index) * 100) : 0)}%
-            </span>
-          </div>
             <button
               onClick={() => {
                 setIndex((i) => (i > 0 ? i - 1 : total - 1));
