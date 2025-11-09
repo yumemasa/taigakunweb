@@ -105,8 +105,8 @@ function RandomQuizClient() {
                       <span className="mb-1">{opt}</span>
                       {showLabel && (
                         <span
-                          className={`absolute text-2xl font-bold ${labelColor} bg-slate-900/80 rounded-full px-3 py-1 shadow-lg border border-white/10`}
-                          style={{ right: 8, bottom: 8 }}
+                          className={`absolute text-sm font-bold ${labelColor} bg-slate-900 rounded-full px-2 py-0.5`}
+                          style={{ right: -8, bottom: -8 }}
                         >
                           {label}
                         </span>

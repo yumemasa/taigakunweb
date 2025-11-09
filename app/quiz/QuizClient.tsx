@@ -98,7 +98,7 @@ export function QuizClient() {
                     <span className="mb-1">{opt}</span>
                   </button>
                   {showLabel && (
-                    <span className={`absolute -bottom-3 -right-3 text-2xl font-bold ${labelColor} bg-slate-900/80 rounded-full px-3 py-1 shadow-lg border border-white/10`}>
+                    <span className={`absolute -bottom-3 -right-3 text-sm font-bold ${labelColor} bg-slate-900 rounded-full px-2 py-0.5`}>
                       {label}
                     </span>
                   )}
