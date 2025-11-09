@@ -1,7 +1,5 @@
 "use client";
 
-import { useState } from "react";
-
 export function ProgressDashboardClient() {
   // 仮の進捗データ（本番は zustand や localStorage で管理）
   const quizCorrect = 0;

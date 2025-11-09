@@ -160,7 +160,7 @@ const ReviewClient = () => {
             const newHistory = [...filtered, reviewEntry];
             window.localStorage.setItem("etec_history", JSON.stringify(newHistory));
           }
-        } catch (e) {
+        } catch {
           // ignore storage errors
         }
 

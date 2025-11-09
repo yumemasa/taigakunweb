@@ -20,7 +20,7 @@ export function HeroSection() {
       setHasMistake(
         Array.isArray(history) && history.some((h: { mode?: string; isCorrect?: boolean }) => ["quiz", "random"].includes(h.mode || "") && h.isCorrect === false)
       );
-    } catch (e) {
+    } catch {
       setHasMistake(false);
     }
   }, []);

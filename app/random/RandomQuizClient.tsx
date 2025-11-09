@@ -3,6 +3,8 @@
 import React, { useState, useEffect } from "react";
 import questions from "@/data/questions.json";
 
+type Question = { ID?: number; category?: string; words?: string; meaning?: string };
+
 // ジェネリックなシャッフル
 function shuffle<T>(array: T[]): T[] {
   return array.map((v) => [Math.random(), v] as [number, T]).sort((a, b) => a[0] - b[0]).map((v) => v[1]);
@@ -23,7 +25,7 @@ function RandomQuizClient() {
   const [correctCount, setCorrectCount] = useState(0);
   const total = questions.length;
   const q = questions[order[index]];
-  const allMeanings = questions.map((q: any) => q.meaning);
+  const allMeanings = questions.map((q: Question) => q.meaning as string);
   const [options, setOptions] = useState<string[]>(() => getRandomOptions(q.meaning, allMeanings, 4));
 
   // indexまたはorderが変わった時だけ選択肢を再生成

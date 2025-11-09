@@ -17,7 +17,8 @@ export function QuizClient() {
   const [correctCount, setCorrectCount] = useState(0);
   const total = questions.length;
   const q = questions[index];
-  const allMeanings = questions.map((q) => q.meaning);
+  type Question = { ID?: number; category?: string; words?: string; meaning?: string };
+  const allMeanings = questions.map((q: Question) => q.meaning as string);
   const [options, setOptions] = useState<string[]>(() => getRandomOptions(q.meaning, allMeanings, 4));
 
   // indexが変わった時だけ選択肢を再生成
