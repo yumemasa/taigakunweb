@@ -118,28 +118,32 @@ function RandomQuizClient() {
               );
             })}
           </div>
-          <div className="w-full flex justify-center items-center gap-6 pt-6">
-          <div className="mt-6">
-            <span className="text-slate-400">
-              正答率: {isAnswered ? Math.round((correctCount / (index + 1)) * 100) : (index > 0 ? Math.round((correctCount / index) * 100) : 0)}%
-            </span>
-          </div>
-            <button
-              onClick={() => {
-                setIndex((i) => (i > 0 ? i - 1 : total - 1));
-                setSelected(null);
-                setIsAnswered(false);
-              }}
-              className="glass-panel rounded-full border border-white/10 px-6 py-2 text-base text-white hover:border-neon-magenta/70"
-            >
-              前へ
-            </button>
-            <button
-              onClick={handleNext}
-              className="glass-panel rounded-full border border-white/10 px-6 py-2 text-base text-white hover:border-neon-cyan/70"
-            >
-              次へ
-            </button>
+          <div className="w-full grid grid-cols-[1fr_auto] items-start gap-6 pt-6">
+            <div className="flex flex-col items-start gap-3">
+              <div className="mt-6">
+                <span className="text-slate-400">
+                  正答率: {isAnswered ? Math.round((correctCount / (index + 1)) * 100) : (index > 0 ? Math.round((correctCount / index) * 100) : 0)}%
+                </span>
+              </div>
+              <button
+                onClick={() => {
+                  setIndex((i) => (i > 0 ? i - 1 : total - 1));
+                  setSelected(null);
+                  setIsAnswered(false);
+                }}
+                className="glass-panel rounded-full border border-white/10 px-6 py-2 text-base text-white hover:border-neon-magenta/70"
+              >
+                前へ
+              </button>
+            </div>
+            <div className="flex items-center gap-6">
+              <button
+                onClick={handleNext}
+                className="glass-panel rounded-full border border-white/10 px-6 py-2 text-base text-white hover:border-neon-cyan/70"
+              >
+                次へ
+              </button>
+            </div>
           </div>
         </div>
       </div>
