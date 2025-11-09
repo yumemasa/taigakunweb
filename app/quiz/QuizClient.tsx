@@ -72,7 +72,7 @@ export function QuizClient() {
           <div className="mb-2 text-sm text-slate-400">{index + 1}/{total}</div>
           <div className="mb-8 text-2xl font-bold text-neon-cyan">{q.words}</div>
           <div className="grid gap-4">
-            {options.map((opt, i) => {
+            {options.map((opt) => {
               let label = "";
               let labelColor = "";
               let showLabel = false;
@@ -88,9 +88,8 @@ export function QuizClient() {
                 }
               }
               return (
-                <div className="relative w-full">
+                <div key={opt} className="relative w-full">
                   <button
-                    key={opt}
                     onClick={() => { if (!isAnswered) handleSelect(opt); }}
                     className={`glass-panel w-full rounded-xl border px-4 py-3 text-base text-white transition-colors flex flex-row items-center justify-between ${isAnswered ? (opt === q.meaning ? "border-emerald-400 bg-emerald-500/20" : opt === selected ? "border-rose-400 bg-rose-500/20" : "border-white/10 bg-slate-900/60") : "border-white/10 bg-slate-900/60 hover:border-neon-magenta/70"}`}
                     disabled={isAnswered}

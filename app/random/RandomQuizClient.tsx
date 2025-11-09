@@ -3,8 +3,9 @@
 import React, { useState, useEffect } from "react";
 import questions from "@/data/questions.json";
 
-function shuffle(array: any[]) {
-  return array.map((v) => [Math.random(), v]).sort((a, b) => a[0] - b[0]).map((v) => v[1]);
+// ジェネリックなシャッフル
+function shuffle<T>(array: T[]): T[] {
+  return array.map((v) => [Math.random(), v] as [number, T]).sort((a, b) => a[0] - b[0]).map((v) => v[1]);
 }
 
 function getRandomOptions(correctMeaning: string, allMeanings: string[], count: number) {
@@ -22,7 +23,7 @@ function RandomQuizClient() {
   const [correctCount, setCorrectCount] = useState(0);
   const total = questions.length;
   const q = questions[order[index]];
-  const allMeanings = questions.map((q) => q.meaning);
+  const allMeanings = questions.map((q: any) => q.meaning);
   const [options, setOptions] = useState<string[]>(() => getRandomOptions(q.meaning, allMeanings, 4));
 
   // indexまたはorderが変わった時だけ選択肢を再生成
@@ -78,7 +79,7 @@ function RandomQuizClient() {
           <div className="mb-2 text-sm text-slate-400">{index + 1}/{total}</div>
           <div className="mb-8 text-2xl font-bold text-neon-cyan">{q.words}</div>
           <div className="grid gap-4">
-            {options.map((opt, i) => {
+            {options.map((opt) => {
               let label = "";
               let labelColor = "";
               let showLabel = false;
@@ -94,9 +95,8 @@ function RandomQuizClient() {
                 }
               }
               return (
-                <div className="relative w-full">
+                <div key={opt} className="relative w-full">
                     <button
-                      key={opt}
                       onClick={() => { if (!isAnswered) handleSelect(opt); }}
                       className={`glass-panel w-full rounded-xl border px-4 py-3 text-base text-white transition-colors flex flex-row items-center justify-between ${isAnswered ? (opt === q.meaning ? "border-emerald-400 bg-emerald-500/20" : opt === selected ? "border-rose-400 bg-rose-500/20" : "border-white/10 bg-slate-900/60") : "border-white/10 bg-slate-900/60 hover:border-neon-magenta/70"}`}
                       disabled={isAnswered}

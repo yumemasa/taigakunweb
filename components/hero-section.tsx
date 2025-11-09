@@ -18,7 +18,7 @@ export function HeroSection() {
       }
       const history = JSON.parse(historyRaw || "[]");
       setHasMistake(
-        Array.isArray(history) && history.some((h: any) => ["quiz", "random"].includes(h.mode) && h.isCorrect === false)
+        Array.isArray(history) && history.some((h: { mode?: string; isCorrect?: boolean }) => ["quiz", "random"].includes(h.mode || "") && h.isCorrect === false)
       );
     } catch (e) {
       setHasMistake(false);

@@ -3,13 +3,13 @@
 import { useState } from "react";
 
 export function ProgressDashboardClient() {
-  // 仮の進捗データ（本番はzustandやlocalStorageで管理）
-  const [quizCorrect, setQuizCorrect] = useState(0);
-  const [quizTotal, setQuizTotal] = useState(0);
-  const [randomCorrect, setRandomCorrect] = useState(0);
-  const [randomTotal, setRandomTotal] = useState(0);
-  const [reviewCorrect, setReviewCorrect] = useState(0);
-  const [reviewTotal, setReviewTotal] = useState(0);
+  // 仮の進捗データ（本番は zustand や localStorage で管理）
+  const quizCorrect = 0;
+  const quizTotal = 0;
+  const randomCorrect = 0;
+  const randomTotal = 0;
+  const reviewCorrect = 0;
+  const reviewTotal = 0;
 
   // 進捗率計算
   const quizRate = quizTotal ? Math.round((quizCorrect / quizTotal) * 100) : 0;

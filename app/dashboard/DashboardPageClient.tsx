@@ -3,22 +3,6 @@
 "use client";
 
 import React, { useEffect, useState } from "react";
-import { Radar, RadarChart, PolarGrid, PolarAngleAxis, PolarRadiusAxis, ResponsiveContainer } from "recharts";
-import GitHubCalendar from "react-github-calendar";
-
-// 日付ごとに解答数を集計してGitHubCalendarに渡すための関数
-function getActivityData(history: any[]) {
-  const dateMap: Record<string, number> = {};
-  history.forEach((h) => {
-    // 日付（yyyy-mm-dd）形式に変換
-    const d = h.date ? h.date.split(" ")[0].replace(/[./]/g, "-") : "";
-    if (d) {
-      dateMap[d] = (dateMap[d] || 0) + 1;
-    }
-  });
-  // GitHubCalendar用の配列 [{date: "2025-11-09", count: 3}, ...]
-  return Object.entries(dateMap).map(([date, count]) => ({ date, count }));
-}
 import questions from "@/data/questions.json";
 
 type HistoryItem = {
@@ -35,7 +19,6 @@ const neonColors = ["#00FFFF", "#FF00FF", "#06b6d4", "#fb7185", "#38bdf8", "#a21
 
 export function DashboardPageClient() {
   const [history, setHistory] = useState<HistoryItem[]>([]);
-  const [studyTime, setStudyTime] = useState(0); // 仮: 秒数
 
   useEffect(() => {
     if (typeof window !== "undefined") {
@@ -43,38 +26,25 @@ export function DashboardPageClient() {
       if (raw) {
         setHistory(JSON.parse(raw));
       }
-      // 仮: 学習時間（localStorageに保存していれば取得）
-      const timeRaw = window.localStorage.getItem("etec_study_time");
-      if (timeRaw) setStudyTime(Number(timeRaw));
+  // 学習時間は未使用のため取得しません
     }
   }, []);
 
-  // サマリー（新旧履歴形式両対応）
+  // サマリー（新旧履歴形式両対応） — 正答率は累積で計算する
   let totalAnswers = 0;
   let totalCorrect = 0;
   if (history.length > 0) {
-    // 新形式（isCorrect）
-    const hasIsCorrect = history.some(h => typeof h.isCorrect === "boolean");
+    const hasIsCorrect = history.some((h) => typeof h.isCorrect === "boolean");
     if (hasIsCorrect) {
-      totalAnswers = history.filter(h => typeof h.isCorrect === "boolean").length;
-      totalCorrect = history.filter(h => h.isCorrect === true).length;
+      const filtered = history.filter((h) => typeof h.isCorrect === "boolean");
+      totalAnswers = filtered.length;
+      totalCorrect = filtered.filter((h) => h.isCorrect === true).length;
     } else {
-      // 旧形式（correct, total）
       totalAnswers = history.reduce((sum, h) => sum + (h.total ?? 0), 0);
       totalCorrect = history.reduce((sum, h) => sum + (h.correct ?? 0), 0);
     }
   }
-  // 正答率は「最新の回答が正解なら100%、不正解なら0%」で表示（分母が増えて下がる現象を防ぐ）
-  let accuracy = 0;
-  if (history.length > 0) {
-    const last = history[history.length - 1];
-    if (typeof last.isCorrect === "boolean") {
-      accuracy = last.isCorrect ? 100 : 0;
-    } else if (typeof last.correct === "number" && typeof last.total === "number") {
-      // 旧形式は最新履歴の正解数/総数で判定
-      accuracy = last.correct === last.total ? 100 : 0;
-    }
-  }
+  const accuracy = totalAnswers ? Math.round((totalCorrect / totalAnswers) * 100) : 0;
 
   // 全カテゴリ一覧をquestions.jsonから取得
   const allCategories = Array.from(new Set((Array.isArray(questions) ? questions : []).map((q: any) => q.category))).filter(Boolean);
@@ -106,13 +76,7 @@ export function DashboardPageClient() {
     );
   }
 
-  // 学習時間（hh:mm:ss表示）
-  function formatTime(sec: number) {
-    const h = Math.floor(sec / 3600);
-    const m = Math.floor((sec % 3600) / 60);
-    const s = sec % 60;
-    return `${h.toString().padStart(2, "0")}:${m.toString().padStart(2, "0")}:${s.toString().padStart(2, "0")}`;
-  }
+  // 学習時間（hh:mm:ss表示） — 未実装のため関数は削除
 
   return (
     <div className="relative mx-auto flex w-full max-w-5xl flex-col gap-10 px-6 py-16">

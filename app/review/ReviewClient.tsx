@@ -1,10 +1,11 @@
 "use client";
 
+/* eslint-disable @typescript-eslint/no-explicit-any */
 import React, { useState, useEffect } from "react";
 import questions from "@/data/questions.json";
 
-function shuffle(array: any[]) {
-  return array.map((v) => [Math.random(), v]).sort((a, b) => a[0] - b[0]).map((v) => v[1]);
+function shuffle<T>(array: T[]): T[] {
+  return array.map((v) => [Math.random(), v] as [number, T]).sort((a, b) => a[0] - b[0]).map((v) => v[1]);
 }
 
 function getRandomOptions(correctMeaning: string, allMeanings: string[], count: number) {
@@ -16,7 +17,6 @@ function getRandomOptions(correctMeaning: string, allMeanings: string[], count: 
 
 const ReviewClient = () => {
   const [mounted, setMounted] = useState(false);
-  const [mistakes, setMistakes] = useState<number[]>([]);
   const [index, setIndex] = useState(0);
   const [selected, setSelected] = useState<string | null>(null);
   const [isAnswered, setIsAnswered] = useState(false);
@@ -203,9 +203,8 @@ const ReviewClient = () => {
                 }
               }
               return (
-                <div className="relative w-full">
+                <div key={opt} className="relative w-full">
                   <button
-                    key={opt}
                     onClick={() => { if (!isAnswered) handleSelect(opt); }}
                     className={`glass-panel w-full rounded-xl border px-4 py-3 text-base text-white transition-colors flex flex-row items-center justify-between ${isAnswered ? (opt === q.meaning ? "border-emerald-400 bg-emerald-500/20" : opt === selected ? "border-rose-400 bg-rose-500/20" : "border-white/10 bg-slate-900/60") : "border-white/10 bg-slate-900/60 hover:border-neon-magenta/70"}`}
                     disabled={isAnswered}
