@@ -21,7 +21,6 @@ const ReviewClient = () => {
   const [selected, setSelected] = useState<string | null>(null);
   const [isAnswered, setIsAnswered] = useState(false);
   const [correctCount, setCorrectCount] = useState(0);
-  const [answeredCount, setAnsweredCount] = useState(0);
   const [reviewOrder, setReviewOrder] = useState<number[]>([]);
   const [pendingRemovalIndex, setPendingRemovalIndex] = useState<number | null>(null);
   const [reviewLoaded, setReviewLoaded] = useState(false);
@@ -129,8 +128,7 @@ const ReviewClient = () => {
     setSelected(opt);
     setIsAnswered(true);
 
-    // 回答数をカウント（同一問題で複数回カウントされないよう isAnswered の切り替わり時にのみカウント）
-    setAnsweredCount((c) => c + 1);
+  // 回答フラグは isAnswered で管理（answeredCount は不要）
 
     // 正誤判定
     const isCorrect = opt === q.meaning;
