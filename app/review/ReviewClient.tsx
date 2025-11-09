@@ -21,6 +21,7 @@ const ReviewClient = () => {
   const [selected, setSelected] = useState<string | null>(null);
   const [isAnswered, setIsAnswered] = useState(false);
   const [correctCount, setCorrectCount] = useState(0);
+  const [answeredCount, setAnsweredCount] = useState(0);
   const [reviewOrder, setReviewOrder] = useState<number[]>([]);
   const [pendingRemovalIndex, setPendingRemovalIndex] = useState<number | null>(null);
   const [reviewLoaded, setReviewLoaded] = useState(false);
@@ -38,8 +39,8 @@ const ReviewClient = () => {
     if (historyRaw) {
       try { history = JSON.parse(historyRaw); } catch {}
     }
-    // quiz, randomで間違えた履歴エントリから questions のインデックスを抽出（後方互換対応）
-    const mistakeEntries = history.filter((h: any) => ["quiz", "random"].includes(h.mode) && h.isCorrect === false);
+  // quiz, random, review で間違えた履歴エントリから questions のインデックスを抽出（後方互換対応）
+  const mistakeEntries = history.filter((h: any) => ["quiz", "random", "review"].includes(h.mode) && h.isCorrect === false);
     const mistakeIndexes: number[] = mistakeEntries.map((h: any) => {
       // 優先: 明示的に保存された questionIndex を使う
       if (typeof h.questionIndex === "number" && h.questionIndex >= 0 && h.questionIndex < questions.length) {
@@ -128,6 +129,9 @@ const ReviewClient = () => {
     setSelected(opt);
     setIsAnswered(true);
 
+    // 回答数をカウント（同一問題で複数回カウントされないよう isAnswered の切り替わり時にのみカウント）
+    setAnsweredCount((c) => c + 1);
+
     // 正誤判定
     const isCorrect = opt === q.meaning;
     if (isCorrect) {
@@ -169,7 +173,18 @@ const ReviewClient = () => {
       }
     } else {
       // 不正解は記録しておく
-      setMistakes((prev) => [...prev, questions.indexOf(q)]);
+      // 履歴には review の不正解を保存しておく (次回の復習で再出題されるようにする)
+      if (typeof window !== "undefined") {
+        try {
+          const historyRaw2 = window.localStorage.getItem("etec_history");
+          let history2: any[] = [];
+          if (historyRaw2) history2 = JSON.parse(historyRaw2);
+          history2.push({ mode: "review", date: new Date().toLocaleString(), questionId: q.ID ?? null, questionIndex: reviewOrder.length > 0 ? reviewOrder[index] : index, category: q.category, isCorrect: false });
+          window.localStorage.setItem("etec_history", JSON.stringify(history2));
+        } catch {
+          // ignore
+        }
+      }
     }
   };
 
@@ -259,9 +274,13 @@ const ReviewClient = () => {
                     const nextQ = questions[newOrder[newIndex]];
                     setOptions(getRandomOptions(nextQ.meaning, allMeanings, 4));
                   } else {
-                    // 通常の次へ: 最後なら先頭に戻る（セッションは reviewOrder が空になるまで継続）
+                    // 通常の次へ: 最後の問題ならセッションを終了してトップへ戻す
+                    if (index >= reviewQuestions.length - 1) {
+                      if (typeof window !== "undefined") window.location.href = "/";
+                      return;
+                    }
                     setIndex((i) => {
-                      const next = i < reviewQuestions.length - 1 ? i + 1 : 0;
+                      const next = i < reviewQuestions.length - 1 ? i + 1 : i;
                       setSelected(null);
                       setIsAnswered(false);
                       setPendingRemovalIndex(null);

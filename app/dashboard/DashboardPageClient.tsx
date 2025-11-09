@@ -3,7 +3,6 @@
 "use client";
 
 import React, { useEffect, useState } from "react";
-import questions from "@/data/questions.json";
 
 type HistoryItem = {
   mode: string;
