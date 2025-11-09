@@ -15,9 +15,6 @@ type HistoryItem = {
   total?: number;
 };
 
-// 色配列（現在は未使用）
-const neonColors: string[] = [];
-
 export function DashboardPageClient() {
   const [history, setHistory] = useState<HistoryItem[]>([]);
 
@@ -47,17 +44,7 @@ export function DashboardPageClient() {
   }
   const accuracy = totalAnswers ? Math.round((totalCorrect / totalAnswers) * 100) : 0;
 
-  // 全カテゴリ一覧をquestions.jsonから取得
-  const allCategories = Array.from(new Set((Array.isArray(questions) ? questions : []).map((q: { category?: string }) => q.category))).filter(Boolean);
-  // 履歴からカテゴリごとの正答率を集計
-  const categoryStats: Record<string, { correct: number; total: number }> = {};
-  history.forEach((h) => {
-    if (!h.category) return;
-    if (!categoryStats[h.category]) categoryStats[h.category] = { correct: 0, total: 0 };
-    categoryStats[h.category].total += 1;
-    if (h.isCorrect) categoryStats[h.category].correct += 1;
-  });
-  // レーダーデータ生成は一旦省略（将来表示する場合に復元）
+  // カテゴリ別統計（将来的にグラフを表示する場合はここを使います）
 
   // サマリーカード
   function SummaryCard({ title, value, unit, color }: { title: string; value: string | number; unit?: string; color?: string }) {
