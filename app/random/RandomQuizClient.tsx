@@ -79,9 +79,9 @@ function RandomQuizClient() {
         <div className="flex-1">
           <div className="mb-2 text-xs text-slate-400">{q.category}</div>
           <div className="mb-2 text-sm text-slate-400">{index + 1}/{total}</div>
-          {/* 正答率を左上に表示 */}
-          <div className="absolute top-4 left-4">
-            <span className="text-slate-400 text-sm">
+          {/* 正答率: モバイルでは右上、デスクトップ以上では左上に表示 */}
+          <div className="absolute top-4 right-4 md:left-4 md:right-auto">
+            <span className="text-slate-400 text-xs md:text-sm">
               正答率: {isAnswered ? Math.round((correctCount / (index + 1)) * 100) : (index > 0 ? Math.round((correctCount / index) * 100) : 0)}%
             </span>
           </div>
